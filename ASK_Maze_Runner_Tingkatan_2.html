@@ -105,7 +105,7 @@ const cs=[
 ["Algoritma","Apakah ciri algoritma yang baik?","Langkah jelas, teratur dan berakhir","Arahan kabur","Mesti tiada input","Mesti gelung tanpa henti",0,"Algoritma perlu jelas dan menyelesaikan masalah."]
 ];
 for(const c of cs)add(c[0],c[1],c.slice(2,6),c[6],c[7]);
-const nums=[8,9,10,11,13,14,17,19,21,22,27,28,33,35,37,42,48,52,60,65,70,75,88,96,110,144,180,225,300,511];
+const nums=[6,7,23,26,29,34,36,38,41,43,46,49,53,57,61,66,71,76,89,97,111,145,181,226,301,512,513,514,515,516];
 for(const n of nums){let v=n.toString(8);add("Sistem Nombor Perlapanan",`Tukarkan perpuluhan ${n} kepada perlapanan.`,[v,(n+2).toString(8),String(n),(n-2).toString(8)],0,`${n}₁₀ = ${v}₈.`);}
 const extra=[
 ["Struktur Kawalan","Jika hujan, bawa payung; jika tidak, teruskan perjalanan. Ini contoh…","Pilihan","Ulangan","Pemalar","String",0,"Tindakan dipilih berdasarkan syarat."],
@@ -126,12 +126,44 @@ const extra=[
 ];
 for(const c of extra)add(c[0],c[1],c.slice(2,6),c[6],c[7]);
 // Fill to 200 with additional number-conversion practice items.
-for(let n=5;n<600&&bank.length<200;n+=5){let v=n.toString(16).toUpperCase();add("Sistem Nombor Perenambelasan",`Tukarkan perpuluhan ${n} kepada perenambelasan.`,[v,String(n),(n+1).toString(16).toUpperCase(),(n-1).toString(16).toUpperCase()],0,`${n}₁₀ = ${v}₁₆.`);}
+const usedHex=new Set(conv16.map(([n])=>n));
+for(let n=5;n<1200&&bank.length<200;n+=5){if(usedHex.has(n))continue;usedHex.add(n);let v=n.toString(16).toUpperCase();let opts=[v,(n+1).toString(16).toUpperCase(),(n+2).toString(16).toUpperCase(),(n+3).toString(16).toUpperCase()];add("Sistem Nombor Perenambelasan",`Tukarkan perpuluhan ${n} kepada perenambelasan.`,opts,0,`${n}₁₀ = ${v}₁₆.`);}
+for (const q of bank) { const seen = new Set([String(q.o[q.a])]); for (let i=0;i<q.o.length;i++) { if (i===q.a) continue; if (seen.has(String(q.o[i]))) { const replacements = ['Pilihan lain yang tidak betul','Nilai yang berbeza','Bukan jawapan yang tepat','Pilihan tidak berkaitan']; let r = replacements.find(x=>!seen.has(x)); if (!r) r = `Distraktor ${i+1}`; q.o[i]=r; } seen.add(String(q.o[i])); } }
 const questions=bank.slice(0,200);
 const $=id=>document.getElementById(id);
 let quiz=[],qi=0,score=0,lives=5,history=[],player={name:"",cls:""},answered=false,maze=[],cols=15,rows=15,cell=0,px=1,py=1,goalCells=[],mapTargets=[],mazeSeed=1,moveCount=0;
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function start(){player.name=$("name").value.trim();player.cls=$("cls").value.trim();if(!player.name||!player.cls){alert("Sila masukkan nama dan kelas dahulu.");return;}quiz=shuffle([...questions]).slice(0,30).map(q=>{let p=q.o.map((v,i)=>({v,correct:i===q.a}));shuffle(p);return {...q,o:p.map(x=>x.v),a:p.findIndex(x=>x.correct)};});qi=0;score=0;lives=5;history=[];$("start").style.display="none";$("results").style.display="none";$("game").style.display="block";newQuestion();}
+function selectBalancedQuestions(allQuestions, total=30){
+  const groups = new Map();
+  for(const q of allQuestions){
+    const topic = String(q.t || q.topic || "Topik lain").trim() || "Topik lain";
+    if(!groups.has(topic)) groups.set(topic, []);
+    groups.get(topic).push(q);
+  }
+  const topics = shuffle([...groups.keys()]);
+  for(const topic of topics) groups.set(topic, shuffle(groups.get(topic).slice()));
+  const selected = [];
+  let round = 0;
+  while(selected.length < total){
+    let addedThisRound = false;
+    for(const topic of topics){
+      const pool = groups.get(topic);
+      if(round < pool.length && selected.length < total){
+        selected.push(pool[round]);
+        addedThisRound = true;
+      }
+    }
+    if(!addedThisRound) break;
+    round++;
+  }
+  return shuffle(selected).map(q=>{
+    const p=q.o.map((v,i)=>({v,correct:i===q.a}));
+    shuffle(p);
+    return {...q,o:p.map(x=>x.v),a:p.findIndex(x=>x.correct)};
+  });
+}
+
+function start(){player.name=$("name").value.trim();player.cls=$("cls").value.trim();if(!player.name||!player.cls){alert("Sila masukkan nama dan kelas dahulu.");return;}quiz=selectBalancedQuestions(questions,30);qi=0;score=0;lives=5;history=[];$("start").style.display="none";$("results").style.display="none";$("game").style.display="block";newQuestion();}
 function newQuestion(){answered=false;px=1;py=1;moveCount=0;makeMaze();const q=quiz[qi];$("count").textContent=String(qi+1).padStart(2,"0")+" / 30";$("bar").style.width=(qi/30*100)+"%";$("score").textContent=score;$("lives").textContent="♥".repeat(lives)+"♡".repeat(5-lives);$("topic").textContent=q.t;$("question").textContent=q.q;$("instruction").textContent="Gerakkan watak 🧑 melalui maze ke pintu A, B, C atau D. Hanya satu pintu ialah jawapan betul."; $("feedback").textContent="Cari jalan keluar yang betul."; $("feedback").className="feedback";$("next").style.display="none";drawMaze();}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 // Randomized perfect maze using depth-first search on odd-sized grid.

@@ -70,7 +70,37 @@ const questions = [{"t":"Nombor Nisbah","q":"Hasil 10 + (−2) ialah…","o":["8
 const $=id=>document.getElementById(id);
 let quiz=[],qi=0,score=0,lives=5,history=[],player={name:"",cls:""},answered=false,maze=[],cols=15,rows=15,cell=0,px=1,py=1,goalCells=[],mapTargets=[],mazeSeed=1,moveCount=0;
 function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
-function start(){player.name=$("name").value.trim();player.cls=$("cls").value.trim();if(!player.name||!player.cls){alert("Sila masukkan nama dan kelas dahulu.");return;}quiz=shuffle([...questions]).slice(0,30).map(q=>{let p=q.o.map((v,i)=>({v,correct:i===q.a}));shuffle(p);return {...q,o:p.map(x=>x.v),a:p.findIndex(x=>x.correct)};});qi=0;score=0;lives=5;history=[];$("start").style.display="none";$("results").style.display="none";$("game").style.display="block";newQuestion();}
+function selectBalancedQuestions(allQuestions, total=30){
+  const groups = new Map();
+  for(const q of allQuestions){
+    const topic = String(q.t || q.topic || "Topik lain").trim() || "Topik lain";
+    if(!groups.has(topic)) groups.set(topic, []);
+    groups.get(topic).push(q);
+  }
+  const topics = shuffle([...groups.keys()]);
+  for(const topic of topics) groups.set(topic, shuffle(groups.get(topic).slice()));
+  const selected = [];
+  let round = 0;
+  while(selected.length < total){
+    let addedThisRound = false;
+    for(const topic of topics){
+      const pool = groups.get(topic);
+      if(round < pool.length && selected.length < total){
+        selected.push(pool[round]);
+        addedThisRound = true;
+      }
+    }
+    if(!addedThisRound) break;
+    round++;
+  }
+  return shuffle(selected).map(q=>{
+    const p=q.o.map((v,i)=>({v,correct:i===q.a}));
+    shuffle(p);
+    return {...q,o:p.map(x=>x.v),a:p.findIndex(x=>x.correct)};
+  });
+}
+
+function start(){player.name=$("name").value.trim();player.cls=$("cls").value.trim();if(!player.name||!player.cls){alert("Sila masukkan nama dan kelas dahulu.");return;}quiz=selectBalancedQuestions(questions,30);qi=0;score=0;lives=5;history=[];$("start").style.display="none";$("results").style.display="none";$("game").style.display="block";newQuestion();}
 function newQuestion(){answered=false;px=1;py=1;moveCount=0;makeMaze();const q=quiz[qi];$("count").textContent=String(qi+1).padStart(2,"0")+" / 30";$("bar").style.width=(qi/30*100)+"%";$("score").textContent=score;$("lives").textContent="♥".repeat(lives)+"♡".repeat(5-lives);$("topic").textContent=q.t;$("question").textContent=q.q;$("instruction").textContent="Gerakkan watak 🧑 melalui maze ke pintu A, B, C atau D. Hanya satu pintu ialah jawapan betul."; $("feedback").textContent="Cari jalan keluar yang betul."; $("feedback").className="feedback";$("next").style.display="none";drawMaze();}
 function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
 // Randomized perfect maze using depth-first search on odd-sized grid.
