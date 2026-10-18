@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ASK Maze Runner — Tingkatan 2</title>
+<style>
+:root{--cyan:#66f4ff;--blue:#5287ff;--pink:#ff5e91;--green:#6cffbb;--gold:#ffd166;--bg:#030815;--panel:rgba(8,17,39,.94);--line:#27456f;--muted:#a5b8da}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at 50% 0%,#172b55,#050b1b 55%,#01040b);color:#eff6ff;font-family:Inter,Segoe UI,Arial,sans-serif;min-height:100vh}
+.wrap{max-width:1100px;margin:auto;padding:16px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.logo{font-size:clamp(20px,4vw,30px);font-weight:1000;letter-spacing:1.4px}.logo span{color:var(--cyan);text-shadow:0 0 18px #66f4ff55}.pill{border:1px solid #34517d;border-radius:999px;padding:8px 12px;background:#09152e;color:#c6d9ff;font-size:12px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:18px;padding:20px;box-shadow:0 15px 50px #0006,inset 0 0 22px #17396b18}
+#start,#results{max-width:760px;margin:6vh auto}.hero{font-size:clamp(34px,7vw,62px);font-weight:1000;line-height:1;margin:20px 0}.hero em{font-style:normal;color:var(--cyan)}.sub{color:var(--muted);line-height:1.6}.inputs{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin:20px 0}input{width:100%;padding:14px;background:#050d20;border:1px solid #34517d;border-radius:10px;color:white;font-size:16px;outline:none}input:focus{border-color:var(--cyan)}
+.btn{border:0;border-radius:10px;padding:13px 18px;font-weight:900;font-size:15px;cursor:pointer;color:#03101d;background:linear-gradient(100deg,var(--cyan),#8eb7ff);transition:.15s}.btn:hover{filter:brightness(1.08);transform:translateY(-2px)}.btn.secondary{background:#142442;color:#eff6ff;border:1px solid #3b5684}
+#game{display:none}.hud{display:grid;grid-template-columns:1fr auto auto;gap:10px;align-items:center;margin:15px 0}.progress{height:6px;border-radius:9px;background:#192a49;overflow:hidden;margin-top:7px}.progress div{height:100%;background:linear-gradient(90deg,var(--blue),var(--cyan));width:0;transition:width .25s}.hearts{letter-spacing:3px;color:var(--pink);font-size:20px}
+.gamegrid{display:grid;grid-template-columns:minmax(0,1.35fr) minmax(260px,.8fr);gap:14px}.mazePanel{padding:14px}.mazeHead{display:flex;justify-content:space-between;gap:8px;align-items:center;margin-bottom:10px;flex-wrap:wrap}.legend{font-size:12px;color:var(--muted)}#maze{display:block;width:100%;max-width:620px;margin:auto;border:1px solid #294b7b;border-radius:12px;background:#040b1c;touch-action:none}
+.controls{display:grid;grid-template-columns:repeat(3,52px);grid-template-rows:repeat(2,45px);gap:5px;justify-content:center;margin:12px auto 0}.controls button{background:#12264a;color:#dffaff;border:1px solid #355783;border-radius:9px;font-size:20px;font-weight:900;cursor:pointer}.controls button:active{background:#1d4e76}
+.questionPanel{display:flex;flex-direction:column;gap:12px}.qtopic{font-size:11px;color:var(--cyan);letter-spacing:1.5px;font-weight:900;text-transform:uppercase}.question{font-size:clamp(19px,2.5vw,25px);font-weight:850;line-height:1.35}.hint{color:#9fb6dc;font-size:13px;line-height:1.5}feedback{min-height:40px;font-size:14px;line-height:1.5;color:#cad8f1}.feedback.good{color:var(--green)}.feedback.bad{color:#ff91aa}
+.bottom{display:flex;justify-content:space-between;gap:10px;align-items:center;flex-wrap:wrap;margin-top:14px}.keyhint{font-size:12px;color:var(--muted)}
+#results{display:none}.score{font-size:clamp(50px,10vw,88px);font-weight:1000;color:var(--cyan)}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:18px 0}.stat{background:#08152e;border:1px solid #27436e;border-radius:12px;padding:14px}.stat small{color:var(--muted)}.stat b{display:block;font-size:25px;margin-top:5px}.review{max-height:300px;overflow:auto}.reviewitem{padding:11px 0;border-bottom:1px solid #263d61;font-size:14px;line-height:1.5}footer{text-align:center;color:#7184a8;font-size:12px;padding:20px}
+@media(max-width:780px){.gamegrid{grid-template-columns:1fr}.questionPanel{min-height:330px}.hud{grid-template-columns:1fr auto}.hud .pill:last-child{grid-column:1/-1;justify-self:start}}
+@media(max-width:500px){.wrap{padding:10px}.panel{padding:14px}.inputs{grid-template-columns:1fr}.stats{grid-template-columns:1fr 1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+ <header class="top"><div class="logo">ASK <span>MAZE RUNNER</span></div><div class="pill">PUZZLE LABIRIN • TINGKATAN 2</div></header>
+ <section id="start" class="panel">
+  <div class="pill">🧩 MISI: CARI PINTU JAWAPAN</div>
+  <h1 class="hero">Masuk maze.<br><em>Selesaikan kuiz.</em></h1>
+  <p class="sub">Gerakkan watak melalui labirin untuk sampai ke petak jawapan yang betul. Dinding menghalang laluan, jadi cari jalan yang sesuai. Setiap misi mempunyai 30 soalan rawak, 5 nyawa dan bank 200 soalan latihan ASK Tingkatan 2.</p>
+  <div class="inputs"><input id="name" placeholder="Nama murid" maxlength="60"><input id="cls" placeholder="Kelas (contoh: 2 Bestari)" maxlength="30"></div>
+  <button class="btn" id="startBtn">MULA MENEROKA ▶</button>
+  <p class="sub" style="font-size:13px;margin-top:16px">Kawalan: kekunci anak panah / WASD, butang arah pada skrin atau leret pada maze. Baca jawapan pada pintu A, B, C atau D dan bergerak ke pintu pilihan.</p>
+ </section>
+ <section id="game">
+  <div class="hud">
+   <div class="pill">SOALAN <b id="count">01 / 30</b><div class="progress"><div id="bar"></div></div></div>
+   <div class="pill">SKOR <b id="score">0</b></div>
+   <div class="pill">NYAWA <span id="lives" class="hearts">♥♥♥♥♥</span></div>
+  </div>
+  <div class="gamegrid">
+   <div class="panel mazePanel">
+    <div class="mazeHead"><b>🧭 LABIRIN DATA</b><span class="legend">🟦 Dinding · 🧑 Pemain · 🚪 Pintu jawapan</span></div>
+    <canvas id="maze" width="560" height="560" aria-label="Labirin permainan"></canvas>
+    <div class="controls">
+     <span></span><button data-dir="up" aria-label="Atas">▲</button><span></span>
+     <button data-dir="left" aria-label="Kiri">◀</button><button data-dir="down" aria-label="Bawah">▼</button><button data-dir="right" aria-label="Kanan">▶</button>
+    </div>
+    <div class="keyhint" style="text-align:center;margin-top:8px">Gerakkan watak petak demi petak. Maze mempunyai simpang dan laluan alternatif. Semua pintu boleh dicapai; cari jalan ke A/B/C/D yang betul.</div>
+   </div>
+   <div class="panel questionPanel">
+    <div class="qtopic" id="topic">ALGORITMA</div>
+    <div class="question" id="question">Soalan akan dipaparkan di sini.</div>
+    <div class="hint" id="instruction">Cari pintu A, B, C atau D di dalam maze. Pilih jawapan dengan bergerak ke pintu yang betul.</div>
+    <div class="feedback" id="feedback" aria-live="polite">Mula bergerak untuk mencari jawapan.</div>
+    <div class="bottom"><span class="keyhint" id="position">Kedudukan: —</span><button class="btn" id="next" style="display:none">SOALAN SETERUSNYA →</button></div>
+   </div>
+  </div>
+ </section>
+ <section id="results" class="panel">
+  <div class="pill">LAPORAN MISI</div><h1 class="hero">MISI <em>SELESAI</em></h1><div id="studentResult" class="sub"></div><div id="final" class="score">0 XP</div><div id="rank" class="sub"></div>
+  <div class="stats"><div class="stat"><small>Jawapan betul</small><b id="correct">0/30</b></div><div class="stat"><small>Ketepatan</small><b id="accuracy">0%</b></div><div class="stat"><small>Nyawa berbaki</small><b id="left">0</b></div></div>
+  <h3>Semakan jawapan</h3><div id="review" class="review"></div>
+  <button class="btn" id="again">MAIN SEMULA ↻</button> <button class="btn secondary" onclick="window.print()">CETAK KEPUTUSAN</button>
+ </section>
+ <footer>ASK Maze Runner • Soalan latihan digubal semula berasaskan topik ASK Tingkatan 2, bukan salinan rasmi buku teks.</footer>
+</div>
+<script>
+const bank=[];
+function add(t,q,o,a,e){bank.push({t,q,o,a,e});}
+const conv8=[[8,"10"],[9,"11"],[10,"12"],[11,"13"],[12,"14"],[13,"15"],[14,"16"],[15,"17"],[16,"20"],[18,"22"],[20,"24"],[24,"30"],[25,"31"],[30,"36"],[32,"40"],[40,"50"],[45,"55"],[50,"62"],[56,"70"],[63,"77"],[64,"100"],[72,"110"],[80,"120"],[100,"144"],[120,"170"],[128,"200"],[200,"310"],[255,"377"],[300,"454"],[511,"777"]];
+for(const [n,v] of conv8)add("Sistem Nombor Perlapanan",`Apakah nombor perlapanan bagi ${n} dalam perpuluhan?`,[v,String(n),(n+1).toString(8),(n-1).toString(8)],0,`${n}₁₀ = ${v}₈.`);
+const conv16=[[10,"A"],[11,"B"],[12,"C"],[13,"D"],[14,"E"],[15,"F"],[16,"10"],[17,"11"],[26,"1A"],[31,"1F"],[32,"20"],[42,"2A"],[47,"2F"],[64,"40"],[75,"4B"],[100,"64"],[127,"7F"],[128,"80"],[170,"AA"],[200,"C8"],[255,"FF"],[256,"100"],[300,"12C"],[500,"1F4"],[512,"200"],[768,"300"],[1000,"3E8"],[1023,"3FF"],[2048,"800"],[4095,"FFF"]];
+for(const [n,v] of conv16)add("Sistem Nombor Perenambelasan",`Apakah nombor perenambelasan bagi ${n} dalam perpuluhan?`,[v,String(n),(n+1).toString(16).toUpperCase(),(n-1).toString(16).toUpperCase()],0,`${n}₁₀ = ${v}₁₆.`);
+const cs=[
+["Algoritma","Apakah maksud algoritma?","Langkah tersusun untuk menyelesaikan masalah","Peranti output","Fail audio","Bahasa untuk melukis sahaja",0,"Algoritma ialah urutan langkah yang jelas dan teratur."],
+["Pseudokod","Apakah pseudokod?","Penerangan algoritma dalam bahasa ringkas berstruktur","Kod mesin sahaja","Peranti input","Sistem operasi",0,"Pseudokod menerangkan logik tanpa terikat pada sintaks bahasa tertentu."],
+["Carta Alir","Simbol berlian dalam carta alir mewakili…","Keputusan","Mula atau tamat","Proses","Input sahaja",0,"Berlian menunjukkan keputusan atau syarat."],
+["Carta Alir","Simbol bujur dalam carta alir biasanya mewakili…","Mula atau tamat","Keputusan","Proses","Ulangan sahaja",0,"Simbol terminal menunjukkan mula atau tamat."],
+["Carta Alir","Simbol segi empat tepat menunjukkan…","Proses","Keputusan","Mula/tamat","Input sahaja",0,"Segi empat tepat menunjukkan proses."],
+["Carta Alir","Parallelogram dalam carta alir biasanya mewakili…","Input atau output","Keputusan","Mula/tamat","Ulangan",0,"Parallelogram mewakili input/output."],
+["Struktur Kawalan","Struktur pilihan digunakan untuk…","Memilih tindakan berdasarkan syarat","Mengulang tanpa henti","Menamakan pemboleh ubah","Menyimpan imej",0,"Pilihan menentukan laluan berdasarkan syarat."],
+["Struktur Kawalan","Apakah maksud pilihan bersarang?","Pilihan berada di dalam pilihan lain","Pilihan tanpa syarat","Ulangan tanpa henti","Arahan output",0,"Pilihan dalaman terletak dalam struktur pilihan lain."],
+["Ulangan","Apakah tujuan struktur ulangan?","Melaksanakan arahan berulang kali","Memadam pemboleh ubah","Menukar integer kepada teks","Menamatkan komputer",0,"Ulangan mengelakkan penulisan arahan sama berkali-kali."],
+["Ulangan","Gelung for sesuai digunakan apabila…","Bilangan ulangan diketahui","Tiada arahan dibuat","Pemalar sahaja digunakan","Carta alir dilukis",0,"for lazim digunakan apabila bilangan ulangan diketahui."],
+["Ulangan","Apakah risiko gelung tak terhingga?","Program mengulang tanpa berhenti","Program pasti lebih tepat","Nilai menjadi sifar automatik","Tiada output langsung",0,"Gelung boleh berterusan jika syarat tidak menjadi palsu."],
+["Debugging","Apakah maksud debugging?","Mencari dan membaiki ralat program","Memadam sistem operasi","Menambah muzik","Menutup komputer",0,"Debugging mengenal pasti dan membaiki ralat."],
+["Ralat","Program berjalan tetapi menghasilkan jawapan salah. Ini mungkin…","Ralat logik","Ralat sintaks sahaja","Monitor rosak semestinya","Tiada input semestinya",0,"Ralat logik memberi hasil yang tidak dikehendaki."],
+["Ralat","Apakah ralat sintaks?","Pelanggaran peraturan penulisan kod","Jawapan logik salah","Komputer tiada internet","Fail terlalu besar",0,"Ralat sintaks melanggar peraturan bahasa."],
+["Pemboleh Ubah","Apakah pemboleh ubah?","Ruang bernama yang nilainya boleh berubah","Nilai yang sentiasa tetap","Simbol carta alir","Peranti output",0,"Nilai pemboleh ubah boleh dikemas kini."],
+["Pemalar","Apakah pemalar?","Nilai yang ditetapkan dan tidak berubah","Nilai rawak setiap saat","Arahan ulangan","Nama imej",0,"Pemalar mewakili nilai tetap."],
+["Jenis Data","Jenis data integer menyimpan…","Nombor bulat","Teks panjang sahaja","Benar/palsu sahaja","Nombor perpuluhan sahaja",0,"Integer menyimpan nombor bulat."],
+["Jenis Data","Jenis data boolean menyimpan…","Benar atau palsu","Ayat panjang","Huruf tunggal","Nombor perpuluhan",0,"Boolean mewakili true atau false."],
+["Jenis Data","Jenis data double sesuai untuk…","Nombor yang mempunyai bahagian perpuluhan","Satu aksara sahaja","Nilai benar/palsu","Imej sahaja",0,"Double menyimpan nombor perpuluhan."],
+["Jenis Data","Jenis data char biasanya menyimpan…","Satu aksara","Satu perenggan","Nombor perpuluhan","Senarai fail",0,"Char mewakili satu aksara."],
+["Jenis Data","Jenis data string menyimpan…","Rentetan teks","Nilai benar/palsu sahaja","Nombor bulat sahaja","Alamat IP sahaja",0,"String menyimpan rentetan aksara."],
+["Input Output","Apakah fungsi input?","Menerima data daripada pengguna","Memaparkan hasil sahaja","Mengulang arahan","Mengesan warna",0,"Input membolehkan program menerima data."],
+["Input Output","Apakah fungsi output?","Memaparkan atau mengeluarkan maklumat","Menerima data sahaja","Mengisytiharkan gelung","Menamakan pemboleh ubah",0,"Output menyampaikan hasil kepada pengguna."],
+["Operator","Operator perbandingan digunakan untuk…","Membandingkan dua nilai","Menambah gambar","Mengulang arahan","Menamakan fail",0,"Perbandingan menghasilkan nilai benar atau palsu."],
+["Operator","Apakah hasil 5 > 3?","Benar / True","Palsu / False","5","3",0,"5 lebih besar daripada 3."],
+["Operator","Apakah hasil 4 == 4?","Benar / True","Palsu / False","8","0",0,"Kedua-dua nilai adalah sama."],
+["Operator Logik","Apakah fungsi AND?","Benar jika kedua-dua syarat benar","Benar jika satu syarat benar","Membalikkan nilai","Menambah nombor",0,"AND memerlukan kedua-dua syarat benar."],
+["Operator Logik","Apakah fungsi OR?","Benar jika sekurang-kurangnya satu syarat benar","Benar hanya jika kedua-dua palsu","Membahagi nombor","Menukar huruf",0,"OR benar jika satu atau kedua-dua syarat benar."],
+["Operator Logik","Apakah fungsi NOT?","Menterbalikkan nilai logik","Menambah nilai","Membandingkan fail","Mengulang gelung",0,"NOT menukar true kepada false dan sebaliknya."],
+["Algoritma","Apakah ciri algoritma yang baik?","Langkah jelas, teratur dan berakhir","Arahan kabur","Mesti tiada input","Mesti gelung tanpa henti",0,"Algoritma perlu jelas dan menyelesaikan masalah."]
+];
+for(const c of cs)add(c[0],c[1],c.slice(2,6),c[6],c[7]);
+const nums=[8,9,10,11,13,14,17,19,21,22,27,28,33,35,37,42,48,52,60,65,70,75,88,96,110,144,180,225,300,511];
+for(const n of nums){let v=n.toString(8);add("Sistem Nombor Perlapanan",`Tukarkan perpuluhan ${n} kepada perlapanan.`,[v,(n+2).toString(8),String(n),(n-2).toString(8)],0,`${n}₁₀ = ${v}₈.`);}
+const extra=[
+["Struktur Kawalan","Jika hujan, bawa payung; jika tidak, teruskan perjalanan. Ini contoh…","Pilihan","Ulangan","Pemalar","String",0,"Tindakan dipilih berdasarkan syarat."],
+["Struktur Kawalan","Syarat `markah >= 40` digunakan untuk…","Menguji sama ada markah sekurang-kurangnya 40","Menambah 40 markah","Mengulang 40 kali","Memaparkan nama",0,"Operator >= bermaksud lebih besar atau sama dengan."],
+["Operator Logik","Apakah hasil TRUE AND FALSE?","False","True","0.5","Ralat sintaks",0,"AND memerlukan kedua-dua nilai benar."],
+["Operator Logik","Apakah hasil TRUE OR FALSE?","True","False","Tiada nilai","Ralat sintaks",0,"OR benar jika sekurang-kurangnya satu benar."],
+["Kod Arahan","Jika x = 4 kemudian x = x + 3, nilai baharu x ialah…","7","4","3","12",0,"4 + 3 = 7."],
+["Kod Arahan","Jika bil = 6 kemudian bil = bil - 2, nilai bil ialah…","4","6","8","12",0,"6 - 2 = 4."],
+["Kod Arahan","Mengapa nama pemboleh ubah yang bermakna penting?","Kod lebih mudah difahami","Semua ralat hilang automatik","Program tidak perlukan input","Komputer jadi lebih besar",0,"Nama deskriptif meningkatkan kebolehbacaan."],
+["Debugging","Selepas membaiki ralat, apakah langkah seterusnya?","Uji semula program","Anggap semua selesai tanpa semakan","Padam algoritma","Tutup fail",0,"Ujian semula mengesahkan pembaikan."],
+["Sistem Nombor Perenambelasan","Dalam perenambelasan, simbol A mewakili…","10","11","12","15",0,"A bersamaan 10."],
+["Sistem Nombor Perenambelasan","Dalam perenambelasan, simbol F mewakili…","15","14","16","10",0,"F bersamaan 15."],
+["Sistem Nombor Perlapanan","Digit manakah tidak sah dalam sistem perlapanan?","8","7","0","3",0,"Digit perlapanan hanya 0 hingga 7."],
+["Sistem Nombor Perenambelasan","Apakah asas sistem perenambelasan?","16","8","2","10",0,"Sistem perenambelasan mempunyai asas 16."],
+["Carta Alir","Anak panah dalam carta alir menunjukkan…","Arah aliran","Keputusan","Mula/tamat","Nilai pemboleh ubah",0,"Anak panah menunjukkan arah aliran proses."],
+["Pseudokod","Mengapa pseudokod berguna?","Merancang logik sebelum menulis kod sebenar","Ia terus menjadi aplikasi siap","Ia menggantikan ujian","Ia hanya boleh dibaca komputer",0,"Pseudokod membantu merancang logik."],
+["Ulangan","Mengapa pembilang gelung perlu dikemas kini?","Supaya gelung boleh menuju keadaan tamat","Supaya semua nilai jadi teks","Untuk membuang syarat","Untuk menukar warna",0,"Kemas kini boleh menyebabkan syarat akhirnya palsu."]
+];
+for(const c of extra)add(c[0],c[1],c.slice(2,6),c[6],c[7]);
+// Fill to 200 with additional number-conversion practice items.
+for(let n=5;n<600&&bank.length<200;n+=5){let v=n.toString(16).toUpperCase();add("Sistem Nombor Perenambelasan",`Tukarkan perpuluhan ${n} kepada perenambelasan.`,[v,String(n),(n+1).toString(16).toUpperCase(),(n-1).toString(16).toUpperCase()],0,`${n}₁₀ = ${v}₁₆.`);}
+const questions=bank.slice(0,200);
+const $=id=>document.getElementById(id);
+let quiz=[],qi=0,score=0,lives=5,history=[],player={name:"",cls:""},answered=false,maze=[],cols=15,rows=15,cell=0,px=1,py=1,goalCells=[],mapTargets=[],mazeSeed=1,moveCount=0;
+function shuffle(a){for(let i=a.length-1;i>0;i--){let j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function start(){player.name=$("name").value.trim();player.cls=$("cls").value.trim();if(!player.name||!player.cls){alert("Sila masukkan nama dan kelas dahulu.");return;}quiz=shuffle([...questions]).slice(0,30).map(q=>{let p=q.o.map((v,i)=>({v,correct:i===q.a}));shuffle(p);return {...q,o:p.map(x=>x.v),a:p.findIndex(x=>x.correct)};});qi=0;score=0;lives=5;history=[];$("start").style.display="none";$("results").style.display="none";$("game").style.display="block";newQuestion();}
+function newQuestion(){answered=false;px=1;py=1;moveCount=0;makeMaze();const q=quiz[qi];$("count").textContent=String(qi+1).padStart(2,"0")+" / 30";$("bar").style.width=(qi/30*100)+"%";$("score").textContent=score;$("lives").textContent="♥".repeat(lives)+"♡".repeat(5-lives);$("topic").textContent=q.t;$("question").textContent=q.q;$("instruction").textContent="Gerakkan watak 🧑 melalui maze ke pintu A, B, C atau D. Hanya satu pintu ialah jawapan betul."; $("feedback").textContent="Cari jalan keluar yang betul."; $("feedback").className="feedback";$("next").style.display="none";drawMaze();}
+function esc(s){return String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
+// Randomized perfect maze using depth-first search on odd-sized grid.
+function makeMaze(){
+ cols=15;rows=15;
+ // Build a connected maze with multiple branches. DFS carves the base corridors,
+ // then extra walls are removed to create loops and alternative routes.
+ maze=Array.from({length:rows},()=>Array(cols).fill(1));
+ const stack=[[1,1]];maze[1][1]=0;
+ while(stack.length){
+  const [x,y]=stack[stack.length-1];
+  const dirs=shuffle([[0,-2],[2,0],[0,2],[-2,0]]);
+  let carved=false;
+  for(const [dx,dy] of dirs){
+   const nx=x+dx,ny=y+dy;
+   if(nx>0&&nx<cols-1&&ny>0&&ny<rows-1&&maze[ny][nx]===1){
+    maze[y+dy/2][x+dx/2]=0;maze[ny][nx]=0;stack.push([nx,ny]);carved=true;break;
+   }
+  }
+  if(!carved)stack.pop();
+ }
+ // Add loops / alternate corridors by opening selected walls between existing corridors.
+ for(let i=0;i<Math.floor(cols*rows*0.095);i++){
+  const x=1+Math.floor(Math.random()*(cols-2));
+  const y=1+Math.floor(Math.random()*(rows-2));
+  if(maze[y][x]!==1)continue;
+  const horizontal=(maze[y][x-1]===0&&maze[y][x+1]===0);
+  const vertical=(maze[y-1][x]===0&&maze[y+1][x]===0);
+  if(horizontal||vertical)maze[y][x]=0;
+ }
+ // Widen the corridors to about two tiles wherever possible. Use a snapshot so
+ // newly opened cells do not cascade into huge empty rooms in the same pass.
+ const base=maze.map(row=>row.slice());
+ for(let y=1;y<rows-1;y++){
+  for(let x=1;x<cols-1;x++){
+   if(base[y][x]!==0)continue;
+   const horizontal=base[y][x-1]===0||base[y][x+1]===0;
+   const vertical=base[y-1][x]===0||base[y+1][x]===0;
+   if(horizontal&&!vertical){
+    const sides=shuffle([[0,-1],[0,1]]);
+    const side=sides.find(([dx,dy])=>base[y+dy][x+dx]===1);
+    if(side)maze[y+side[1]][x+side[0]]=0;
+   }else if(vertical&&!horizontal){
+    const sides=shuffle([[-1,0],[1,0]]);
+    const side=sides.find(([dx,dy])=>base[y+dy][x+dx]===1);
+    if(side)maze[y+side[1]][x+side[0]]=0;
+   }
+  }
+ }
+ // Flood-fill all cells reachable from the spawn. All answer gates are selected from
+ // this connected region, so every answer can be reached from the starting point.
+ const reachable=[];
+ const queue=[[1,1]],seen=new Set(["1,1"]);
+ while(queue.length){
+  const [x,y]=queue.shift();reachable.push({x,y});
+  for(const [dx,dy] of [[0,-1],[1,0],[0,1],[-1,0]]){
+   const nx=x+dx,ny=y+dy,k=nx+","+ny;
+   if(nx>0&&nx<cols-1&&ny>0&&ny<rows-1&&maze[ny][nx]===0&&!seen.has(k)){seen.add(k);queue.push([nx,ny]);}
+  }
+ }
+ const desired=[[cols-2,rows-2],[cols-2,1],[1,rows-2],[Math.floor(cols/2),Math.floor(rows/2)]];
+ goalCells=[];
+ for(let i=0;i<4;i++){
+  const target=desired[i];
+  let candidates=reachable.filter(c=>!(c.x===1&&c.y===1)&&!goalCells.some(g=>g.x===c.x&&g.y===c.y));
+  candidates.sort((a,b)=>((a.x-target[0])**2+(a.y-target[1])**2)-((b.x-target[0])**2+(b.y-target[1])**2));
+  const separated=candidates.find(c=>goalCells.every(g=>Math.abs(g.x-c.x)+Math.abs(g.y-c.y)>=4));
+  const chosen=separated||candidates[0];
+  goalCells.push({x:chosen.x,y:chosen.y,idx:i});
+ }
+}
+function drawMaze(){const c=$("maze"),ctx=c.getContext("2d"),dpr=window.devicePixelRatio||1,box=c.getBoundingClientRect();const size=Math.max(240,Math.min(box.width||560,560));c.width=size*dpr;c.height=size*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);const unit=size/cols;cell=unit;ctx.clearRect(0,0,size,size);
+ for(let y=0;y<rows;y++)for(let x=0;x<cols;x++){if(maze[y][x]){ctx.fillStyle="#17335f";ctx.fillRect(x*unit,y*unit,unit,unit);ctx.strokeStyle="#2c5586";ctx.strokeRect(x*unit+.5,y*unit+.5,unit-1,unit-1);}else{ctx.fillStyle="#071329";ctx.fillRect(x*unit,y*unit,unit,unit);ctx.strokeStyle="#12294b";ctx.strokeRect(x*unit+.5,y*unit+.5,unit-1,unit-1);}}
+ const labels=["A","B","C","D"];
+ for(const g of goalCells){
+   // All doors look the same; each door displays its own answer choice.
+   ctx.fillStyle="#56346f";ctx.fillRect(g.x*unit+1,g.y*unit+1,unit-2,unit-2);
+   ctx.strokeStyle="#d5a5ff";ctx.lineWidth=2;ctx.strokeRect(g.x*unit+2,g.y*unit+2,unit-4,unit-4);
+   ctx.fillStyle="#fff";ctx.font=`900 ${Math.max(9,unit*.40)}px Arial`;ctx.textAlign="center";ctx.textBaseline="middle";
+   ctx.fillText(labels[g.idx],(g.x+.5)*unit,(g.y+.5)*unit);
+   const answer=String(quiz[qi].o[g.idx]);
+   const padX=5, padY=4, fontSize=size<390?7:8;
+   ctx.font=`700 ${fontSize}px Arial`;
+   // Measure each wrapped line first so the label box always fits its text.
+   const maxTextW=Math.min(118,Math.max(72,size*.22)), words=answer.split(/\s+/), lines=[];let line="";
+   for(const word of words){
+     const test=line?line+" "+word:word;
+     if(ctx.measureText(test).width>maxTextW&&line){lines.push(line);line=word;}
+     else line=test;
+   }
+   if(line)lines.push(line);
+   const lineH=fontSize+2;
+   const measuredW=Math.max(0,...lines.map(t=>ctx.measureText(t).width));
+   const boxW=Math.min(size-8,Math.max(68,Math.ceil(measuredW+padX*2)));
+   const boxH=lines.length*lineH+padY*2;
+   let bx=(g.x+.5)*unit< size/2 ? g.x*unit+unit+2 : g.x*unit-boxW-2;
+   let by=(g.y+.5)*unit< size/2 ? g.y*unit+unit+2 : g.y*unit-boxH-2;
+   bx=Math.max(2,Math.min(size-boxW-2,bx));by=Math.max(2,Math.min(size-boxH-2,by));
+   ctx.fillStyle="#09142ad9";ctx.fillRect(bx,by,boxW,boxH);
+   ctx.strokeStyle="#d5a5ff";ctx.lineWidth=1;ctx.strokeRect(bx,by,boxW,boxH);
+   ctx.fillStyle="#fff";ctx.font=`700 ${fontSize}px Arial`;ctx.textAlign="left";ctx.textBaseline="top";
+   lines.forEach((ln,j)=>ctx.fillText(ln,bx+padX,by+padY+j*lineH));
+ }
+ // start pad
+ ctx.fillStyle="#1a5c91";ctx.beginPath();ctx.arc((1.5)*unit,(1.5)*unit,unit*.38,0,Math.PI*2);ctx.fill();ctx.font=`${unit*.65}px Arial`;ctx.textAlign="center";ctx.textBaseline="middle";ctx.fillText("🧑",1.5*unit,1.5*unit);
+ // player
+ if(!(px===1&&py===1)){ctx.fillStyle="#66f4ff";ctx.shadowColor="#66f4ff";ctx.shadowBlur=10;ctx.beginPath();ctx.arc((px+.5)*unit,(py+.5)*unit,unit*.34,0,Math.PI*2);ctx.fill();ctx.shadowBlur=0;ctx.font=`${unit*.65}px Arial`;ctx.fillText("🧑",(px+.5)*unit,(py+.5)*unit);}
+ $("position").textContent=`Kedudukan: ${px}, ${py} • Langkah: ${moveCount}`;
+}
+function move(dx,dy){if($("game").style.display!=="block"||answered)return;const nx=px+dx,ny=py+dy;if(nx<0||nx>=cols||ny<0||ny>=rows||maze[ny][nx]===1){$("feedback").textContent="Dinding menghalang laluan! Cuba arah lain.";$("feedback").className="feedback bad";return;}px=nx;py=ny;moveCount++;drawMaze();const g=goalCells.find(g=>g.x===px&&g.y===py);if(g){reachGoal(g.idx);}else{$("feedback").textContent="Teruskan meneroka maze dan cari pintu jawapan.";$("feedback").className="feedback";}}
+function reachGoal(idx){answered=true;const q=quiz[qi],ok=idx===q.a;if(ok){score+=100;$("feedback").textContent=`BETUL! Anda menemui pintu ${"ABCD"[idx]} dan mendapat +100 mata. ${q.e}`;$("feedback").className="feedback good";}else{lives--;$("feedback").textContent=`Belum tepat! Pintu ${"ABCD"[idx]} bukan jawapan yang betul. −1 nyawa. Jawapan: ${"ABCD"[q.a]}. ${q.e}`;$("feedback").className="feedback bad";}history.push({q:q.q,t:q.t,chosen:`${"ABCD"[idx]}. ${q.o[idx]}`,correct:`${"ABCD"[q.a]}. ${q.o[q.a]}`,ok,e:q.e});$("score").textContent=score;$("lives").textContent="♥".repeat(lives)+"♡".repeat(5-lives);$("bar").style.width=((qi+1)/30*100)+"%";$("next").style.display="inline-block";$("next").textContent=(lives<=0||qi===29)?"LIHAT KEPUTUSAN →":"SOALAN SETERUSNYA →";drawMaze();}
+function finish(){$("game").style.display="none";$("results").style.display="block";$("studentResult").textContent=`${player.name} • ${player.cls} • ${new Date().toLocaleDateString("ms-MY")}`;$("final").textContent=score+" XP";const n=history.filter(x=>x.ok).length;$("correct").textContent=n+"/30";$("accuracy").textContent=Math.round(n/Math.max(1,history.length)*100)+"%";$("left").textContent=lives+"/5";$("rank").textContent=n>=27?"RANK: MAZE MASTER — Cemerlang!":n>=22?"RANK: PATHFINDER — Sangat baik!":n>=15?"RANK: EXPLORER — Teruskan latihan!":"RANK: ROOKIE — Cuba lagi dan tingkatkan penguasaan!";$("review").innerHTML=history.map((h,i)=>`<div class="reviewitem"><b>${i+1}. ${esc(h.q)}</b><br><span style="color:${h.ok?'#6cffbb':'#ff91aa'}">${h.ok?'✓ Betul':'✕ Jawapan anda: '+esc(h.chosen)}</span><br>Jawapan betul: <b>${esc(h.correct)}</b><br><span class="sub">${esc(h.e)}</span></div>`).join("");}
+$("startBtn").onclick=start;$("next").onclick=()=>{if(lives<=0||qi===29)finish();else{qi++;newQuestion();}};$("again").onclick=()=>{$("results").style.display="none";$("start").style.display="block";};
+document.addEventListener("keydown",e=>{if($("game").style.display!=="block")return;const m={ArrowUp:[0,-1],w:[0,-1],ArrowDown:[0,1],s:[0,1],ArrowLeft:[-1,0],a:[-1,0],ArrowRight:[1,0],d:[1,0]};if(m[e.key]){e.preventDefault();move(...m[e.key]);}});
+document.querySelectorAll("[data-dir]").forEach(b=>{const d={up:[0,-1],down:[0,1],left:[-1,0],right:[1,0]}[b.dataset.dir];b.addEventListener("click",()=>move(...d));});
+let touchStart=null;const canvas=$("maze");canvas.addEventListener("touchstart",e=>{const t=e.changedTouches[0];touchStart={x:t.clientX,y:t.clientY};},{passive:true});canvas.addEventListener("touchend",e=>{if(!touchStart)return;const t=e.changedTouches[0],dx=t.clientX-touchStart.x,dy=t.clientY-touchStart.y;if(Math.max(Math.abs(dx),Math.abs(dy))>20){if(Math.abs(dx)>Math.abs(dy))move(dx>0?1:-1,0);else move(0,dy>0?1:-1);}touchStart=null;},{passive:true});
+window.addEventListener("resize",()=>{if($("game").style.display==="block")drawMaze();});
+</script>
+</body>
+</html>
