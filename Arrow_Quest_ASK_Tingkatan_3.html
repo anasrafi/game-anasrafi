@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="ms">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Arrow Quest — ASK Tingkatan 3 | Fizik Realistik</title>
+<style>
+:root{color-scheme:dark;--bg:#101827;--panel:#192940;--gold:#ffc857;--cyan:#69d9e8;--green:#67e8a5;--red:#ff7180;--muted:#b9c7d8}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#29445f 0,#101827 68%);color:#f5f7fb;font:15px/1.4 system-ui,Segoe UI,Arial,sans-serif}.wrap{max-width:1240px;margin:auto;padding:16px}.header{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:14px}.header h1{margin:0;font-size:clamp(22px,3vw,34px);line-height:1.15}.sub{font-size:13px;color:var(--muted);margin-top:5px}.tag{border:1px solid #ffffff26;background:#ffffff08;border-radius:999px;padding:8px 12px;font-size:12px;font-weight:900;letter-spacing:.3px}.layout{display:grid;grid-template-columns:minmax(0,1fr) 275px;gap:14px}.panel{background:linear-gradient(160deg,#1b2d46,#152238);border:1px solid #ffffff20;border-radius:17px;overflow:hidden;box-shadow:0 16px 45px #0003}.qbar{padding:15px 18px;border-bottom:1px solid #ffffff17;min-height:108px}.topic{font-size:11px;font-weight:900;letter-spacing:1px;color:var(--cyan);text-transform:uppercase}.question{font-size:clamp(17px,2.1vw,24px);font-weight:850;line-height:1.32;margin:8px 0}.muted{font-size:12px;color:var(--muted)}.stage{position:relative;background:#b7d9e5}.stage canvas{width:100%;height:440px;display:block;touch-action:none;cursor:crosshair}.hud{position:absolute;left:10px;top:10px;display:flex;gap:6px;flex-wrap:wrap;pointer-events:none}.hud span{padding:6px 8px;background:#102034e8;border:1px solid #ffffff35;border-radius:8px;font-size:10px;font-weight:900}.charge{position:absolute;right:10px;bottom:10px;width:153px;padding:8px;border-radius:9px;background:#102034ed;border:1px solid #ffffff40;pointer-events:none}.chargebar{height:8px;margin-top:5px;background:#ffffff30;border-radius:20px;overflow:hidden}.fill{width:0;height:100%;background:linear-gradient(90deg,#67e8a5,#ffc857,#ff7180)}.controls{padding:12px 15px;display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;color:var(--muted);font-size:12px}.side{padding:15px}.side h2{margin:0 0 10px;font-size:15px}.stats{display:grid;grid-template-columns:1fr 1fr;gap:8px}.stat{padding:11px;background:#ffffff08;border:1px solid #ffffff14;border-radius:10px}.stat small{display:block;font-size:11px;color:var(--muted);margin-bottom:5px}.stat strong{font-size:21px}.topicrow{display:flex;justify-content:space-between;align-items:center;gap:7px;padding:9px 0;border-bottom:1px solid #ffffff14;font-size:11px}.topicrow b{font-size:11px}.bar{height:6px;border-radius:20px;background:#ffffff18;overflow:hidden;margin-top:5px}.bar div{height:100%;background:linear-gradient(90deg,var(--cyan),var(--green))}.tips{margin-top:15px;padding:11px;border-radius:10px;background:#ffffff08;color:var(--muted);font-size:12px;line-height:1.65}.tips b{color:#fff}.overlay{position:absolute;inset:0;z-index:5;display:flex;align-items:center;justify-content:center;padding:18px;background:#0d1627df}.modal{width:min(440px,100%);padding:23px;background:#192940;border:1px solid #ffffff35;border-radius:18px;text-align:center;box-shadow:0 20px 60px #0008}.modal h2{margin:5px 0 8px}.modal p{color:#c2cedd;font-size:14px}.modal input{width:100%;padding:12px;margin:7px 0 12px;border:1px solid #ffffff35;border-radius:10px;background:#0d192a;color:white;font:inherit}.btn{width:100%;padding:12px 16px;border:0;border-radius:10px;background:var(--gold);color:#172033;font-weight:950;cursor:pointer}.btn:hover{filter:brightness(1.07)}.hidden{display:none!important}.feedback{position:absolute;z-index:4;top:48%;left:50%;transform:translate(-50%,-50%);max-width:90%;padding:12px 16px;border:2px solid #fff;border-radius:10px;background:#102034f2;font-size:18px;font-weight:1000;text-align:center;pointer-events:none}.good{color:var(--green);border-color:var(--green)}.bad{color:var(--red);border-color:var(--red)}
+@media(max-width:850px){.layout{grid-template-columns:1fr}.side{display:grid;grid-template-columns:1fr 1fr;gap:12px}.side>h2{grid-column:1/-1}.tips{margin-top:0}.stage canvas{height:400px}}
+@media(max-width:540px){.wrap{padding:9px}.stage canvas{height:390px}.side{display:block}.tips{margin-top:14px}.question{font-size:17px}.tag{font-size:10px}}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="header"><div><h1>🏹 ARROW QUEST <span style="color:#ffc857">ASK T3</span></h1><div class="sub">Misi Panahan Ilmu · Asas Sains Komputer Tingkatan 3</div></div><div class="tag">60 SOALAN · IKUT TOPIK · TIDAK RAWAK</div></header>
+<div class="layout">
+<main class="panel">
+ <div class="qbar"><div class="topic" id="topic">ASK TINGKATAN 3</div><div class="question" id="question">Sediakan nama pemain untuk memulakan misi.</div><div class="muted" id="qmeta">Panah sasaran jawapan yang betul di sebelah kiri.</div></div>
+ <div class="stage" id="stage"><canvas id="game" aria-label="Medan permainan panahan"></canvas><div class="hud"><span>🖱 BIDIK DENGAN MOUSE</span><span>👇 TAHAN UNTUK CAJ</span><span>🌎 GRAVITI LEBIH KUAT</span></div><div class="charge"><b style="font-size:10px;letter-spacing:.8px">KUASA PANAH <span id="pct">0%</span></b><div class="chargebar"><div class="fill" id="fill"></div></div></div><div class="feedback hidden" id="feedback"></div>
+ <div class="overlay" id="start"><div class="modal"><div style="font-size:44px">🏹</div><h2>Arrow Quest</h2><p>Sudut mouse menentukan arah pelepasan. Tahan klik untuk menarik tali busur, kemudian lepaskan. Anak panah jatuh akibat graviti dan diperlahankan oleh rintangan udara.</p><input id="name" maxlength="24" placeholder="Nama pemain"><button class="btn" id="begin">MULA MISI</button><p style="font-size:11px;margin-bottom:0">Tiada garis trajektori dipaparkan; bidik secara manual dan laraskan sudut.</p></div></div>
+ <div class="overlay hidden" id="end"><div class="modal"><div style="font-size:42px">🏆</div><h2 id="endtitle">Misi Selesai</h2><p id="endtext"></p><button class="btn" id="again">MAIN SEMULA</button></div></div>
+ </div><div class="controls"><span>Bidik secara manual · Graviti menarik anak panah ke bawah</span><span>Tekan <b>R</b> untuk tetapkan semula panahan</span></div>
+</main>
+<aside class="panel side"><h2>📊 STATUS PEMAIN</h2><div class="stats"><div class="stat"><small>SKOR</small><strong id="score">0</strong></div><div class="stat"><small>NYAWA</small><strong id="lives">❤️❤️❤️❤️❤️</strong></div><div class="stat"><small>TEPAT</small><strong id="correct">0</strong></div><div class="stat"><small>KETEPATAN</small><strong id="accuracy">—</strong></div></div><div><h2 style="margin-top:16px">📚 PROGRES TOPIK</h2><div id="progress"></div></div><div class="tips"><b>Petua panahan</b><br>• Sasaran jawapan berada di sebelah kiri.<br>• Mouse menentukan sudut pelepasan; tiada auto-aim.<br>• Anak panah jatuh lebih ketara; bidik lebih tinggi untuk mengimbanginya.<br>• Tiada garis atau titik trajektori bantuan dipaparkan.<br>• Caj lebih lama meningkatkan kelajuan awal panah.<br>• Betul: +100 hingga +150 mata. Salah: −1 nyawa.</div></aside>
+</div></div>
+<script>
+'use strict';
+const topics=[
+{name:'BAB 1 · PEMBANGUNAN ATUR CARA',short:'Bab 1 · Pembangunan Atur Cara',qs:[
+['Apakah tujuan fasa analisis masalah?','Mengenal pasti masalah, input, proses dan output','Menulis semua kod terus','Mencetak dokumentasi sahaja','Memadam pangkalan data',0],
+['Fasa manakah menghasilkan algoritma atau reka bentuk penyelesaian?','Pengujian','Reka bentuk atur cara','Dokumentasi','Penyelenggaraan komputer',1],
+['Apakah aktiviti utama dalam fasa pengekodan?','Menentukan keperluan sahaja','Menyediakan laporan sahaja','Menterjemahkan reka bentuk kepada kod atur cara','Membeli perkakasan',2],
+['Apakah maksud penyahpepijatan (debugging)?','Menyusun data mengikut abjad','Menukar pemboleh ubah kepada teks','Menyimpan salinan cetak','Mengesan dan membetulkan ralat atur cara',3],
+['Mengapakah pengujian atur cara dilakukan?','Memastikan atur cara berfungsi seperti dikehendaki','Menambah saiz fail','Menggantikan analisis masalah','Mengelakkan dokumentasi',0],
+['Nilai yang dimasukkan oleh pengguna dikenali sebagai…','Output','Input','Pseudokod','Dokumentasi',1],
+['Bagi atur cara mengira luas, nilai luas yang dipaparkan ialah…','Input','Proses','Output','Parameter',2],
+['Apakah tujuan dokumentasi atur cara?','Menggantikan semua pengujian','Menyembunyikan cara atur cara berfungsi','Menghapuskan keperluan pengguna','Merekod maklumat penting tentang atur cara',3],
+['Menyenaraikan input, proses dan output berlaku dalam fasa…','Analisis masalah','Pengekodan','Pengujian','Penyelenggaraan',0],
+['Atur cara menghasilkan jawapan salah. Apakah tindakan sesuai?','Terus menerbitkannya','Uji, kenal pasti punca dan nyahpepijat','Padam dokumentasi','Tukar nama fail sahaja',1]]},
+{name:'BAB 2 · KRIPTOGRAFI',short:'Bab 2 · Kriptografi',qs:[
+['Apakah maksud kriptografi?','Kaedah menyusun fail','Kaedah mengukur kelajuan komputer','Teknik melindungi maklumat melalui penyulitan','Teknik melukis carta alir',2],
+['Apakah tujuan penyulitan (encryption)?','Menjadikan data boleh dibaca semua orang','Memadam data asal automatik','Menyusun rekod','Menukarkan teks biasa kepada bentuk sukar difahami tanpa nyahsulit',3],
+['Apakah istilah bagi maklumat asal sebelum disulitkan?','Teks biasa (plaintext)','Teks sifer (ciphertext)','Kunci awam','Pertanyaan SQL',0],
+['Maklumat yang telah melalui penyulitan disebut…','Atribut','Teks sifer (ciphertext)','Entiti','Pseudokod',1],
+['Apakah fungsi kunci dalam kaedah sifer?','Menentukan saiz monitor','Menyimpan rekod','Membantu proses penyulitan atau nyahsulit','Mengira gelung',2],
+['Apakah proses menukarkan teks sifer kembali kepada teks asal?','Penyusunan','Pengecaman corak','Penyahpepijatan','Nyahsulit (decryption)',3],
+['Dalam Sifer Caesar, huruf digantikan berdasarkan…','Anjakan bilangan kedudukan yang ditetapkan','Nilai suhu komputer','Nama pengguna','Saiz skrin',0],
+['Jika anjakan Sifer Caesar ialah +3, huruf A menjadi…','B','D','C','Z',1],
+['Apakah kelemahan Sifer Caesar dengan anjakan tetap?','Tidak boleh menukar huruf','Memerlukan pangkalan data','Mudah diteka melalui percubaan anjakan terhad','Tidak boleh ditulis di kertas',2],
+['Apakah pertimbangan ketika memilih kaedah sifer?','Warna papan kekunci','Bilangan slaid','Saiz ikon','Tahap keselamatan dan kesesuaian penggunaan',3]]},
+{name:'BAB 3 · ALGORITMA',short:'Bab 3 · Algoritma',qs:[
+['Apakah tujuan algoritma search?','Mencari item atau nilai tertentu dalam koleksi data','Menyulitkan kata laluan sahaja','Membina jadual','Memadam sistem operasi',0],
+['Linear search mencari item dengan cara…','Membahagi senarai kepada dua setiap langkah','Memeriksa item satu demi satu','Mengumpulkan data dalam bucket','Memeriksa item terakhir sahaja',1],
+['Binary search sesuai digunakan pada senarai yang…','Mengandungi teks sahaja','Tidak mempunyai nilai','Telah disusun mengikut tertib','Mempunyai satu item sahaja',2],
+['Selepas membandingkan sasaran dengan nilai tengah binary search…','Periksa semua item dari awal','Padam nilai tengah','Tukar semua nilai kepada sifar','Teruskan carian pada separuh yang berkaitan',3],
+['Apakah tujuan algoritma sort?','Menyusun data mengikut tertib tertentu','Menyulitkan teks','Mengesan virus sahaja','Menghasilkan kata laluan rawak',0],
+['Bubble sort menyusun data dengan…','Memilih nilai tengah','Membandingkan item bersebelahan dan menukarnya jika perlu','Menyimpan data ke pangkalan data','Mencari tanpa perbandingan',1],
+['Dalam bubble sort menaik, pasangan 8 dan 3 perlu…','Kekal','Dipadamkan','Ditukar kerana 8 lebih besar daripada 3','Dijadikan satu nilai',2],
+['Apakah konsep asas bucket sort?','Membandingkan setiap pasangan sahaja','Mencari item pertama sahaja','Menyulitkan nombor','Mengagihkan item ke kumpulan atau bucket sebelum digabungkan',3],
+['Senarai [2, 5, 7, 9, 12] dicari menggunakan binary search untuk nilai 9. Nilai tengah pertama ialah…','7','9','5','12',0],
+['Senarai [4, 1, 3] selepas satu perbandingan bubble sort pada pasangan pertama menjadi…','[4, 1, 3]','[1, 4, 3]','[3, 1, 4]','[1, 3, 4]',1],
+['Apakah kelebihan linear search?','Sentiasa lebih pantas','Memerlukan senarai tersusun','Boleh digunakan walaupun data belum disusun','Tidak memerlukan perbandingan',2],
+['Mengapakah binary search tidak sesuai untuk senarai belum tersusun?','Hanya menerima nombor genap','Memerlukan SQL','Tidak boleh mencari teks','Carian separuh senarai memerlukan susunan data',3],
+['Dalam pseudokod, struktur keputusan digunakan untuk…','Memilih tindakan berdasarkan syarat','Mencetak tajuk sahaja','Menyimpan gambar','Menetapkan warna skrin',0],
+['Apakah fungsi carta alir?','Menggantikan semua kod','Menggambarkan langkah dan aliran penyelesaian secara visual','Menyimpan rekod pelanggan','Menyulitkan data',1],
+['Apakah tindakan apabila mengesan ralat dalam algoritma?','Abaikan ralat','Padam semua data','Kenal pasti punca, baiki langkah dan uji semula','Tukar nama algoritma',2]]},
+{name:'BAB 4.1 · PANGKALAN DATA DAN SQL',short:'Bab 4.1 · Pangkalan Data dan SQL',qs:[
+['Apakah pangkalan data?','Sekumpulan arahan grafik','Perisian sunting video','Satu jenis kabel','Koleksi data tersusun yang mudah diurus dan dicapai',3],
+['Apakah kepanjangan SQL?','Structured Query Language','Simple Question List','System Quick Link','Sequential Query Logic',0],
+['Dalam pangkalan data hubungan, entiti biasanya diwakili oleh…','Formula','Jadual','Carta alir','Gelung',1],
+['Apakah atribut dalam pangkalan data?','Keseluruhan pangkalan data','Arahan mengulang kod','Ciri atau medan yang menerangkan entiti','Hubungan rangkaian',2],
+['Apakah fungsi kekunci primer (primary key)?','Menyimpan imej sahaja','Membenarkan ID berulang','Mengisih secara rawak','Mengenal pasti setiap rekod secara unik',3],
+['Apakah fungsi kekunci asing (foreign key)?','Menghubungkan rekod berkaitan antara jadual','Menukar teks kepada ciphertext','Membina gelung','Mengira purata',0],
+['Apakah maksud kekardinalan (cardinality)?','Warna jadual','Jenis perkaitan entiti seperti satu-ke-satu atau satu-ke-banyak','Bilangan aksara fail','Jenis peranti input',1],
+['Apakah tujuan borang (form) dalam pangkalan data?','Menyulitkan rekod','Menggantikan kekunci primer','Memudahkan kemasukan atau paparan data','Menjalankan binary search sahaja',2],
+['Pernyataan SQL untuk mendapatkan data daripada jadual ialah…','DELETE','UPDATE','INSERT','SELECT',3],
+['Apakah fungsi INSERT?','Menambah rekod baharu ke jadual','Memaparkan rekod sahaja','Memadam jadual','Menyusun algoritma',0],
+['Pernyataan SQL untuk mengubah data sedia ada ialah…','SELECT','UPDATE','INSERT','SEARCH',1],
+['Apakah fungsi DELETE?','Menambah lajur','Mencari nilai tengah','Memadam rekod yang memenuhi syarat','Menyusun data menaik',2],
+['Dalam SQL, klausa WHERE digunakan untuk…','Menamakan pangkalan data','Menutup jadual','Mencipta borang','Menetapkan syarat pemilihan atau perubahan rekod',3],
+['Operator Boolean AND benar apabila…','Kedua-dua syarat benar','Sekurang-kurangnya satu benar','Kedua-dua syarat palsu','Tiada syarat dinilai',0],
+['Operator Boolean OR benar apabila…','Semua syarat palsu','Sekurang-kurangnya satu syarat benar','Hanya syarat pertama palsu','Tiada kekunci primer',1]]},
+{name:'BAB 4.2 · STRUKTUR KOD ARAHAN',short:'Bab 4.2 · Struktur Kod Arahan',qs:[
+['Apakah function dalam atur cara?','Jadual untuk rekod','Blok kod yang boleh dipanggil dan lazimnya memulangkan nilai','Kaedah penyulitan','Kekunci asing',1],
+['Apakah procedure?','Medan dalam jadual','Algoritma mengisih sahaja','Blok arahan bernama yang melaksanakan tugas','Monitor',2],
+['Apakah manfaat function dan procedure?','Menambah kod berulang','Menghapuskan pengujian','Membuat pangkalan data tidak boleh diakses','Penggunaan semula kod dan struktur lebih teratur',3],
+['Apakah perbezaan umum function dan procedure?','Function boleh memulangkan nilai; procedure tidak semestinya memulangkan nilai','Procedure sentiasa pulangkan dua nilai','Function hanya untuk pangkalan data','Tiada perbezaan dalam semua bahasa',0],
+['Apakah tujuan parameter?','Menentukan warna latar','Menerima nilai yang diperlukan oleh blok kod','Memadam kod sumber','Menggantikan semua pemboleh ubah',1],
+['Apakah maksud nilai pulangan (return value)?','Bilangan baris kod','Nama jadual','Nilai yang dihantar kembali kepada pemanggil','Mesej ralat sahaja',2],
+['Mengapakah function atau procedure diuji secara berasingan?','Tidak perlu dokumentasi','Nama kod lebih panjang','Mengelakkan semua input','Memastikan setiap bahagian berfungsi seperti dijangka',3],
+['Jika pengiraan digunakan berkali-kali, amalan yang baik ialah…','Letakkan pengiraan dalam function untuk digunakan semula','Salin kod sama di semua tempat','Padam komen','Simpan sebagai imej',0],
+['Apakah tindakan apabila function menghasilkan nilai salah?','Terus guna tanpa semakan','Semak logik, uji data dan baiki ralat','Tukar warna butang','Padam pangkalan data',1],
+['Selepas membaiki ralat atur cara, kita perlu…','Anggap semuanya selesai','Buang semua kes ujian','Jalankan pengujian semula','Tukar nama pemboleh ubah secara rawak',2]]}
+];
+const questions=[];
+topics.forEach((topic,ti)=>topic.qs.forEach((q,qi)=>questions.push({topic:topic.name,short:topic.short,ti,qi,text:q[0],answers:q.slice(1,5),correct:q[5]})));
+const $=id=>document.getElementById(id), canvas=$('game'),ctx=canvas.getContext('2d');
+let W=800,H=440,dpr=1,index=0,score=0,lives=5,correct=0,attempts=0,player='Pemanah',active=false,charging=false,charge=0,answered=false,inFlight=false,aim={x:100,y:100},targets=[],arrows=[],lastFrame=0,shotLock=false;
+function resize(){const rect=canvas.getBoundingClientRect();dpr=Math.min(window.devicePixelRatio||1,2);W=Math.max(280,rect.width);H=Math.max(340,rect.height);canvas.width=Math.round(W*dpr);canvas.height=Math.round(H*dpr);ctx.setTransform(dpr,0,0,dpr,0,0);makeTargets();draw();}
+window.addEventListener('resize',resize);
+function makeTargets(){const q=questions[index];if(!q)return;const x=Math.max(37,Math.min(82,W*.09)),top=H*.145,step=H*.235;targets=q.answers.map((text,i)=>({x,y:top+i*step,r:Math.max(17,Math.min(25,H*.058)),text,letter:'ABCD'[i],i}));}
+function updateUI(){const q=questions[index];if(q){$('topic').textContent=q.topic;$('question').textContent=q.text;$('qmeta').textContent=`SOALAN ${index+1} / ${questions.length} · Pilih jawapan A, B, C atau D.`}
+ $('score').textContent=score;$('lives').textContent='❤️'.repeat(Math.max(0,lives))+'🖤'.repeat(5-Math.max(0,lives));$('correct').textContent=correct;$('accuracy').textContent=attempts?Math.round(correct/attempts*100)+'%':'—';
+ $('progress').innerHTML=topics.map((t,i)=>{let n=questions.slice(0,index).filter(q=>q.ti===i).length;return `<div class="topicrow"><div style="flex:1"><b>${t.short}</b><div class="bar"><div style="width:${n/t.qs.length*100}%"></div></div></div><span>${n}/${t.qs.length}</span></div>`}).join('');}
+function box(x,y,w,h,r,fill,stroke){ctx.beginPath();ctx.roundRect(x,y,w,h,r);ctx.fillStyle=fill;ctx.fill();if(stroke){ctx.strokeStyle=stroke;ctx.lineWidth=1.5;ctx.stroke()}}
+function drawBackground(){const g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#a8d6e7');g.addColorStop(.65,'#dce9d1');g.addColorStop(1,'#8bb78a');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);ctx.fillStyle='#8cb9a4';ctx.beginPath();ctx.moveTo(0,H*.68);for(let x=0;x<=W+20;x+=20)ctx.lineTo(x,H*.59+Math.sin(x*.014)*14);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();ctx.fillStyle='#629777';ctx.beginPath();ctx.moveTo(0,H*.81);for(let x=0;x<=W+20;x+=20)ctx.lineTo(x,H*.72+Math.sin(x*.019+1)*10);ctx.lineTo(W,H);ctx.lineTo(0,H);ctx.fill();ctx.fillStyle='#3d7258';ctx.fillRect(0,H-15,W,15)}
+function wrapText(text,x,y,maxWidth,lineHeight,maxLines){const words=text.split(/\s+/);let line='',lines=[];for(const word of words){const test=line?line+' '+word:word;if(ctx.measureText(test).width>maxWidth&&line){lines.push(line);line=word}else line=test}if(line)lines.push(line);if(lines.length>maxLines){lines=lines.slice(0,maxLines);let s=lines[maxLines-1];while(ctx.measureText(s+'…').width>maxWidth&&s.length)s=s.slice(0,-1);lines[maxLines-1]=s+'…'}lines.forEach((s,i)=>ctx.fillText(s,x,y+i*lineHeight))}
+function drawTarget(t){const bx=t.x+t.r*.68,by=t.y-31,bw=Math.max(95,Math.min(W*.46,355)),bh=62;box(bx,by,bw,bh,9,'#14283eeF','#ffffffaa');for(let i=0;i<4;i++){ctx.beginPath();ctx.arc(t.x,t.y,t.r*(1-i*.23),0,Math.PI*2);ctx.fillStyle=['#e94e58','#fff6e5','#e94e58','#ffc857'][i];ctx.fill();ctx.strokeStyle='#263b50';ctx.lineWidth=.8;ctx.stroke()}ctx.textAlign='left';ctx.fillStyle='#ffc857';ctx.font='900 12px system-ui';ctx.fillText(t.letter,bx+12,by+18);ctx.fillStyle='#fff';ctx.font=`700 ${Math.max(10,Math.min(13,W/62))}px system-ui`;wrapText(t.text,bx+31,by+19,Math.max(55,bw-40),13,3)}
+function drawArcher(){
+ const bx=W-48,by=H*.52;
+ // Wooden bow limbs curve to the left; the string is pulled back as charge increases.
+ ctx.lineCap='round';ctx.strokeStyle='#704321';ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx+5,by-43);ctx.quadraticCurveTo(bx-31,by,bx+5,by+43);ctx.stroke();
+ ctx.strokeStyle='#f5d9a6';ctx.lineWidth=1.8;ctx.beginPath();ctx.moveTo(bx+5,by-43);ctx.lineTo(bx+5+charge*19,by);ctx.lineTo(bx+5,by+43);ctx.stroke();
+ // Minimal archer silhouette.
+ ctx.fillStyle='#263b51';ctx.beginPath();ctx.arc(bx+9,by-54,10,0,Math.PI*2);ctx.fill();ctx.strokeStyle='#263b51';ctx.lineWidth=10;ctx.beginPath();ctx.moveTo(bx+9,by-43);ctx.lineTo(bx+4,by+7);ctx.stroke();ctx.lineWidth=7;ctx.beginPath();ctx.moveTo(bx+7,by-24);ctx.lineTo(bx-7,by-1);ctx.moveTo(bx+4,by+7);ctx.lineTo(bx-8,by+32);ctx.moveTo(bx+4,by+7);ctx.lineTo(bx+21,by+32);ctx.stroke();
+ ctx.strokeStyle='#203849';ctx.lineWidth=1.2;ctx.beginPath();ctx.arc(aim.x,aim.y,7,0,Math.PI*2);ctx.moveTo(aim.x-11,aim.y);ctx.lineTo(aim.x+11,aim.y);ctx.moveTo(aim.x,aim.y-11);ctx.lineTo(aim.x,aim.y+11);ctx.stroke();
+}
+function drawArrow(a){
+ // Nose points in the instantaneous direction of travel.
+ ctx.save();ctx.translate(a.x,a.y);ctx.rotate(Math.atan2(a.vy,a.vx));
+ ctx.strokeStyle='#56351b';ctx.lineWidth=2.8;ctx.beginPath();ctx.moveTo(-12,0);ctx.lineTo(9,0);ctx.stroke();
+ ctx.fillStyle='#f8e7bd';ctx.beginPath();ctx.moveTo(14,0);ctx.lineTo(7,-3);ctx.lineTo(7,3);ctx.closePath();ctx.fill();
+ ctx.fillStyle='#df4f52';ctx.beginPath();ctx.moveTo(-8,0);ctx.lineTo(-14,-3.5);ctx.lineTo(-12,0);ctx.lineTo(-14,3.5);ctx.closePath();ctx.fill();ctx.restore();
+}
+// Physics uses SI units for velocity and gravity, converted to screen pixels only when rendering.
+const PX_PER_M=12, GRAVITY=14.5, DRAG_K=0.00095; // gameplay-enhanced gravity and air drag
+function launchSpeed(c){return 38+44*c;} // m/s: partial draw to a strong full draw
+function launchState(c){const bx=W-48,by=H*.52,originX=bx-10,originY=by;const dx=aim.x-originX,dy=aim.y-originY;const angle=Math.atan2(dy,dx),speed=launchSpeed(c);return{x:originX,y:originY,vx:speed*Math.cos(angle),vy:speed*Math.sin(angle),life:0,shotCharge:c,done:false};}
+function physicsStep(a,dt){
+ const speed=Math.hypot(a.vx,a.vy)||0;
+ // Quadratic drag opposes velocity; gravity always acts downward in canvas coordinates.
+ const ax=-DRAG_K*speed*a.vx, ay=GRAVITY-DRAG_K*speed*a.vy;
+ // Semi-implicit Euler at small substeps is stable enough for this short projectile flight.
+ a.vx+=ax*dt;a.vy+=ay*dt;a.x+=a.vx*PX_PER_M*dt;a.y+=a.vy*PX_PER_M*dt;a.life+=dt;
+}
+function arrowTip(a){const v=Math.hypot(a.vx,a.vy)||1;return{x:a.x+(a.vx/v)*14,y:a.y+(a.vy/v)*14}}
+function segmentDistance(px,py,x1,y1,x2,y2){const dx=x2-x1,dy=y2-y1,l2=dx*dx+dy*dy;if(!l2)return Math.hypot(px-x1,py-y1);const t=Math.max(0,Math.min(1,((px-x1)*dx+(py-y1)*dy)/l2));return Math.hypot(px-(x1+t*dx),py-(y1+t*dy))}
+function draw(){if(!ctx)return;ctx.clearRect(0,0,W,H);drawBackground();targets.forEach(drawTarget);drawArcher();arrows.forEach(drawArrow)}
+function pointer(e){const r=canvas.getBoundingClientRect();aim.x=Math.max(8,Math.min(W-65,e.clientX-r.left));aim.y=Math.max(8,Math.min(H-8,e.clientY-r.top))}
+canvas.addEventListener('pointermove',pointer);
+canvas.addEventListener('pointerdown',e=>{if(!active||answered||inFlight)return;pointer(e);charging=true;charge=0;try{canvas.setPointerCapture(e.pointerId)}catch(err){/* Mouse capture is optional */}});
+canvas.addEventListener('pointerup',e=>{if(!charging)return;pointer(e);shoot()});
+canvas.addEventListener('pointercancel',()=>{if(charging)shoot()});
+function shoot(){
+ if(!active||answered||inFlight){charging=false;return}
+ // The mouse sets the bow's release angle. Gravity and drag then determine the actual flight.
+ arrows=[launchState(charge)];inFlight=true;charging=false;charge=0;$('fill').style.width='0%';$('pct').textContent='0%';
+}
+function showFeedback(message,kind){const f=$('feedback');f.textContent=message;f.className='feedback '+kind;f.classList.remove('hidden');window.clearTimeout(showFeedback.timer);showFeedback.timer=window.setTimeout(()=>f.classList.add('hidden'),900)}
+function registerHit(t,a){if(answered)return;answered=true;inFlight=false;attempts++;const gain=100+Math.round(a.shotCharge*50);if(t.i===questions[index].correct){correct++;score+=gain;showFeedback('TEPAT! +'+gain+' MATA','good')}else{lives--;showFeedback('BELUM TEPAT! −1 NYAWA','bad')}updateUI();window.setTimeout(()=>{if(lives<=0){finish(false);return}index++;if(index>=questions.length){finish(true);return}answered=false;inFlight=false;arrows=[];charge=0;$('fill').style.width='0%';$('pct').textContent='0%';makeTargets();updateUI();draw()},1050)}
+function animate(ts){
+ const frameDt=Math.min(.04,(ts-(lastFrame||ts))/1000||0);lastFrame=ts;
+ if(charging&&active&&!answered){charge=Math.min(1,charge+frameDt*.48);$('fill').style.width=(charge*100)+'%';$('pct').textContent=Math.round(charge*100)+'%'}
+ if(active&&arrows.length){
+   const a=arrows[0];let remaining=frameDt;
+   // 120 Hz integration avoids fast arrows skipping over small targets.
+   while(remaining>0&&!a.done){const dt=Math.min(1/120,remaining);remaining-=dt;const oldTip=arrowTip(a);physicsStep(a,dt);const newTip=arrowTip(a);
+     for(const t of targets){if(segmentDistance(t.x,t.y,oldTip.x,oldTip.y,newTip.x,newTip.y)<=t.r+1){a.done=true;registerHit(t,a);break}}
+     if(!a.done&&(a.x< -35||a.y< -35||a.y>H+35||a.life>3.2)){a.done=true;arrows=[];inFlight=false;showFeedback('TERSASAR — BIDIK LEBIH TINGGI ATAU CAJ LEBIH LAMA','bad')}
+   }
+ }
+ draw();requestAnimationFrame(animate)
+}
+function startGame(){player=$('name').value.trim()||'Pemanah';index=0;score=0;lives=5;correct=0;attempts=0;active=true;charging=false;answered=false;inFlight=false;charge=0;arrows=[];$('start').classList.add('hidden');$('end').classList.add('hidden');$('feedback').classList.add('hidden');makeTargets();updateUI();draw()}
+function esc(s){return s.replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function finish(completed){active=false;charging=false;inFlight=false;$('endtitle').textContent=completed?'Misi Selesai!':'Misi Tamat';$('endtext').innerHTML='Pemain: <b>'+esc(player)+'</b><br>Skor: <b>'+score+'</b><br>Jawapan tepat: <b>'+correct+'/'+attempts+'</b><br>Ketepatan: <b>'+(attempts?Math.round(correct/attempts*100):0)+'%</b><br><br>'+(completed?'Tahniah! Semua 60 soalan selesai.':'Nyawa telah habis. Cuba lagi untuk meningkatkan skor.');$('end').classList.remove('hidden')}
+$('begin').addEventListener('click',startGame);$('again').addEventListener('click',startGame);$('name').addEventListener('keydown',e=>{if(e.key==='Enter')startGame()});window.addEventListener('keydown',e=>{if(e.key.toLowerCase()==='r'&&active&&!answered){arrows=[];charging=false;inFlight=false;charge=0;$('fill').style.width='0%';$('pct').textContent='0%';showFeedback('PANAHAN DISET SEMULA','bad')}});
+updateUI();resize();requestAnimationFrame(animate);
+</script>
+</body></html>
